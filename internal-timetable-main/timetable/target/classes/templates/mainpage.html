@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Internal Rooms Booking Timetable v1.0</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        .red {
+            background: red;
+            width: 50px;
+            height: 50px;
+        }
+
+        .green {
+            background: green;
+            width: 50px;
+            height: 50px;
+
+        }
+
+        .blue {
+            background: lightseagreen;
+            height: 50px;
+        }
+
+        .gold {
+            background: goldenrod;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    Time Table
+</h1>
+
+<div th:if="${ not#lists.isEmpty(products.table)}">
+    <table>
+        <tr>
+            <th class="blue">Room</th>
+            <div th:each="i: ${#numbers.sequence(1, #lists.size(products.table[0].chart))}">
+                <th th:classappend="${i % 2 != 0} ? gold : blue" th:text="${i}"></th>
+            </div>
+        </tr>
+        <tr th:each="row : ${products.table}">
+            <td class="blue" th:text="${row.room_id}"></td>
+            <div th:each="occupied: ${row.chart}">
+                <td th:classappend="${occupied} ? red : green"></td >
+            </div>
+        </tr>
+    </table>
+</div>
+
+<input type="text" id="month" name="month">
+<button onclick="redirect(document.getElementById('month'))">Submit</button>
+
+<script>
+    function redirect(month) {
+        window.location.replace("http://localhost:8080/timetable/" + month.value.toString());
+    }
+</script>
+
+</body>
+</html>

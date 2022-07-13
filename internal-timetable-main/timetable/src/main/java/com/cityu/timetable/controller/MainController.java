@@ -1,21 +1,25 @@
 package com.cityu.timetable.controller;
 
-import com.cityu.timetable.entity.Chart;
-import com.cityu.timetable.service.BookingListServiceImpl;
-import com.cityu.timetable.service.ChartServiceImpl;
+import com.cityu.timetable.entity.TimeTable;
+import com.cityu.timetable.service.TimeTableServiceImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @Controller
 @RequestMapping(path="/timetable")
 public class MainController {
-    @GetMapping("/")
-    public @ResponseBody String setTimeTable(@PathVariable String room_id, @PathVariable String month){
-        BookingListServiceImpl bookingListServiceImpl = new BookingListServiceImpl();
-        ChartServiceImpl chartServiceImpl = new ChartServiceImpl();
-        return chartServiceImpl.provideChart(bookingListServiceImpl.getBookingByMonth(room_id, month), month).toString();
+    @GetMapping("/{month}")
+    public String setTimeTable(Model model, @PathVariable String month){
+        TimeTableServiceImpl timeTableServiceImpl = new TimeTableServiceImpl();
+        List<String> listOfRooms = new LinkedList<String>(Arrays.asList("LAU:16-275", "LAU:17-201", "MPL:2212"));
+        model.addAttribute("products", timeTableServiceImpl.provideChart(listOfRooms, month));
+        return "mainpage";
     }
 }
